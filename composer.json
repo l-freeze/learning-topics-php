@@ -1,0 +1,19 @@
+{
+    "name": "l-freeze/learning-topics-php",
+    "description": "技術指導用教材",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "LearningTopics\\": "src/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^3.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
