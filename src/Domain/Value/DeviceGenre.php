@@ -9,6 +9,7 @@ enum DeviceGenre: int
     case MOBILE_PHONE = 2;
     case GAME = 3;
     case AIR_PURIFIERS = 4;
+    case ART = 5;
 
     public function toName(): string
     {

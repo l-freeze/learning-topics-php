@@ -24,20 +24,20 @@ final class Device
     }
 
     public static function create(
-        string $name,
-        string $typeName,
-        int    $deviceType,
-        int    $memory,
-        int    $storageSize,
+        DeviceName     $name,
+        DeviceTypeName $typeName,
+        DeviceGenre    $deviceType,
+        MemorySize     $memory,
+        StorageSize    $storageSize,
     ): self
     {
         return new self(
             uuid7: Uuid7::create(),
-            name: DeviceName::create($name),
-            typeName: DeviceTypeName::create($typeName),
-            deviceGenre: DeviceGenre::from($deviceType),
-            memory: MemorySize::fromMb($memory),
-            storageSize: StorageSize::fromGB($storageSize),
+            name: $name,
+            typeName: $typeName,
+            deviceGenre: $deviceType,
+            memory: $memory,
+            storageSize: $storageSize,
         );
     }
 
@@ -66,7 +66,7 @@ final class Device
         return $this->memory;
     }
 
-    public function getStorageSize(): StorageSize
+    public function getStorage(): StorageSize
     {
         return $this->storageSize;
     }

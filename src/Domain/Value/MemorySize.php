@@ -6,45 +6,45 @@ namespace LearningTopics\Domain\Value;
 final readonly class MemorySize
 {
     private function __construct(
-        public int $value
+        public float $value
     )
     {
     }
 
-    public static function fromByte(int $byte): self
+    public static function fromByte(float $byte): self
     {
         return new self($byte);
     }
 
-    public static function fromKB(int $kb): self
+    public static function fromKB(float $kb): self
     {
-        return new self($kb * 1024);
+        return self::fromByte($kb * 1024);
     }
 
-    public static function fromMB(int $mb): self
+    public static function fromMB(float $mb): self
     {
-        return new self($mb * 1024 * 1024);
+        return self::fromKB($mb * 1024);
     }
 
-    public static function fromGB(int $gb): self
+    public static function fromGB(float $gb): self
     {
-        return new self($gb * 1024 * 1024 * 1024);
+        return self::fromMB($gb * 1024);
     }
 
 
-    public function toKb(): int
+    public function toKb(): float
     {
-        return $this->value * 1024;
+        return $this->value / 1024;
     }
 
-    public function toMb(): int
+    public function toMb(): float
     {
-        return $this->toKb() * 1024;
+        return $this->toKb() / 1024;
     }
 
-    public function toGb(): int
+    public function toGb(): float
     {
-        return $this->toMb() * 1024;
+        return $this->toMb() / 1024;
     }
 
 }
