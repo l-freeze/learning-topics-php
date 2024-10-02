@@ -1,55 +1,72 @@
 <?php
 declare(strict_types=1);
+
 namespace LearningTopics\Domain\Entity;
-use Ramsey\Uuid\Uuid;
+
+use LearningTopics\Domain\Value\DeviceGenre;
+use LearningTopics\Domain\Value\DeviceName;
+use LearningTopics\Domain\Value\DeviceTypeName;
+use LearningTopics\Domain\Value\MemorySize;
+use LearningTopics\Domain\Value\StorageSize;
+use LearningTopics\Domain\Value\Uuid7;
+
 final class Device
 {
-    private const DEVICE_TYPE_PHONE = 1;
-    private const DEVICE_TYPE_MOBILE_PHONE = 2;
-    private const DEVICE_TYPE_GAME = 3;
-
     private function __construct(
-        private string $uuid,
-        private string $name,
-        private string $typeName,
-        private int    $deviceType,
-        private int    $memory,
-        private int    $storageSize,
+        private Uuid7          $uuid7,
+        private DeviceName     $name,
+        private DeviceTypeName $typeName,
+        private DeviceGenre    $deviceGenre,
+        private MemorySize     $memory,
+        private StorageSize    $storageSize,
     )
     {
     }
 
-    public function getUuid(): string
+    public static function create(
+        string $name,
+        string $typeName,
+        int    $deviceType,
+        int    $memory,
+        int    $storageSize,
+    ): self
     {
-        return $this->uuid;
+        return new self(
+            uuid7: Uuid7::create(),
+            name: DeviceName::create($name),
+            typeName: DeviceTypeName::create($typeName),
+            deviceGenre: DeviceGenre::from($deviceType),
+            memory: MemorySize::fromMb($memory),
+            storageSize: StorageSize::fromGB($storageSize),
+        );
     }
 
-    public function getName(): string
+    public function getUuid7(): Uuid7
+    {
+        return $this->uuid7;
+    }
+
+    public function getName(): DeviceName
     {
         return $this->name;
     }
 
-    public function getTypeName(): string
+    public function getTypeName(): DeviceTypeName
     {
         return $this->typeName;
     }
 
-    public function getDeviceType(): int
+    public function getDeviceGenre(): DeviceGenre
     {
-        return $this->deviceType;
+        return $this->deviceGenre;
     }
 
-    public function isMobilePhone(): bool
-    {
-        return $this->deviceType === self::DEVICE_TYPE_MOBILE_PHONE;
-    }
-
-    public function getMemory(): int
+    public function getMemory(): MemorySize
     {
         return $this->memory;
     }
 
-    public function getStorageSize(): int
+    public function getStorageSize(): StorageSize
     {
         return $this->storageSize;
     }
@@ -57,30 +74,12 @@ final class Device
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid,
-            'name' => $this->name,
-            'typeName' => $this->typeName,
-            'deviceType' => $this->deviceType,
+            'uuid' => $this->uuid7->value,
+            'name' => $this->name->value,
+            'typeName' => $this->typeName->value,
+            'deviceType' => $this->deviceGenre->toName(),
             'memory' => $this->memory,
             'storageSize' => $this->storageSize,
         ];
-    }
-
-    public static function create(
-        string $name,
-        string $typeName,
-        int $deviceType,
-        int $memory,
-        int $storageSize,
-    ): self
-    {
-        return new self(
-            uuid: Uuid::uuid7()->toString(),
-            name: $name,
-            typeName: $typeName,
-            deviceType: $deviceType,
-            memory: $memory,
-            storageSize: $storageSize,
-        );
     }
 }

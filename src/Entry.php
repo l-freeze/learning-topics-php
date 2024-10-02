@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace LearningTopics;
 
 final class Entry
@@ -36,5 +37,19 @@ final class Entry
         print_r($iphone16->toArray());
         print_r($iphonese4->toArray());
         print_r($airPurifier->toArray());
+
+        /**
+         * ValueObjectのルールに沿わない値
+         */
+        // ピカソの絵
+
+        $picture = Domain\Entity\Device::create(
+            name: 'ムンクの叫び',
+            typeName: 'パブロ・ディエゴ・ホセ・フランシスコ・デ・パウラ・ホアン・ネポムセーノ･マリーア・デ・ロス・レメディオス・クリスピン・クリスピアーノ・デ・ラ・サンディシマ・トリニダード･ルイス・イ・ピカソの絵',
+            deviceType: 2,
+            memory: 4,
+            storageSize: 64,
+        );
+        print_r($picture->toArray());
     }
 }
