@@ -13,6 +13,18 @@ readonly final class Interactor
 {
     public function execute(Input $input): Output
     {
+        $shs1 = (new \Packages\Common\Application\SlackNotification\Interactor())->execute(
+            new \Packages\Common\Application\SlackNotification\Input(
+                incomingHookUrl: 'https://hooks.slack.com/services/ただしいURL',
+                channel: '#information',
+                name: 'おみくじ',
+                message: 'おみくじを引きます。',
+                icon: ':github:',
+            )
+        );
+        print_r($shs1);
+
+
         $fortune = (new Retryer\Interactor)->execute(
             new Retryer\Input(
                 closure: function () use ($input) {
@@ -30,6 +42,18 @@ readonly final class Interactor
                 recovery: fn() => Fortune::restore(FortuneType::Daikyo)
             )
         )->result;
+
+        $shs2 = (new \Packages\Common\Application\SlackNotification\Interactor())->execute(
+            new \Packages\Common\Application\SlackNotification\Input(
+                incomingHookUrl: 'https://hooks.slack.com/services/ただしいURL',
+                channel: '#information',
+                name: 'おみくじ',
+                message: 'おみくじを引きます。',
+                icon: ':github:',
+            )
+        );
+        print_r($shs2);
+
         return new Output($fortune);
     }
 
