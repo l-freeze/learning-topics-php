@@ -31,10 +31,24 @@ readonly final class Interactor
                     }
                 }
 
-                sleep($input->delaySeconds);
+                self::caringSleep($input->delaySeconds);
             }
         }
 
         return new Output($result);
+    }
+
+    private static function caringSleep(float $seconds): void
+    {
+        $wholeSeconds = (int)$seconds;
+        $fractionalSeconds = $seconds - $wholeSeconds;
+
+        if ($wholeSeconds > 0) {
+            sleep($wholeSeconds);
+        }
+
+        if ($fractionalSeconds > 0) {
+            usleep((int)($fractionalSeconds * 1_000_000));
+        }
     }
 }

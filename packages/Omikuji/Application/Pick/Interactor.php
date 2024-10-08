@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Packages\Omikuji\Application\Pick;
 
 use Packages\Common\Application\Retryer;
+use Packages\Common\Application\SlackNotification;
 use Packages\Omikuji\Domain\Entity\Fortune;
 use Packages\Omikuji\Domain\Exception\EvenSecondException;
 use Packages\Omikuji\Domain\Value\FortuneType;
@@ -13,8 +14,8 @@ readonly final class Interactor
 {
     public function execute(Input $input): Output
     {
-        $shs1 = (new \Packages\Common\Application\SlackNotification\Interactor())->execute(
-            new \Packages\Common\Application\SlackNotification\Input(
+        $shs1 = (new SlackNotification\Interactor())->execute(
+            new SlackNotification\Input(
                 incomingHookUrl: 'https://hooks.slack.com/services/ただしいURL',
                 channel: '#information',
                 name: 'おみくじ',
@@ -22,8 +23,7 @@ readonly final class Interactor
                 icon: ':github:',
             )
         );
-        print_r($shs1);
-
+        print_r($shs1->result);
 
         $fortune = (new Retryer\Interactor)->execute(
             new Retryer\Input(
@@ -31,7 +31,7 @@ readonly final class Interactor
                     return Fortune::pick($input->donationAmount);
                 },
                 maxAttempts: 3,
-                delaySeconds: 2,
+                delaySeconds: 2.4,
                 onFailure: function (Throwable $e) {
                     if ($e instanceof EvenSecondException) {
                         echo '偶数秒でした。リトライします。' . PHP_EOL;
@@ -43,8 +43,8 @@ readonly final class Interactor
             )
         )->result;
 
-        $shs2 = (new \Packages\Common\Application\SlackNotification\Interactor())->execute(
-            new \Packages\Common\Application\SlackNotification\Input(
+        $shs2 = (new SlackNotification\Interactor())->execute(
+            new SlackNotification\Input(
                 incomingHookUrl: 'https://hooks.slack.com/services/ただしいURL',
                 channel: '#information',
                 name: 'おみくじ',
@@ -52,7 +52,7 @@ readonly final class Interactor
                 icon: ':github:',
             )
         );
-        print_r($shs2);
+        print_r($shs2->result);
 
         return new Output($fortune);
     }
